@@ -18,7 +18,7 @@ easiest way to contribute.
     * **Bug reports** please be as detailed as possible. Include:
         * full ruby engine and version: `ruby -e 'puts RUBY_DESCRIPTION'`
         * operating system and version
-        * version of stickler `ruby -rubygems -e "require 'stickler'; puts Stickler::VERSION"`
+        * version of stickler `ruby -e "require 'stickler'; puts Stickler::VERSION"`
         * as much detail about the bug as possible so I can replicate it. Feel free
           to link in a [gist][]
     * **New Feature**
@@ -42,6 +42,7 @@ easiest way to contribute.
 * [tiago.nobre](https://github.com/macwadu)
 * [Michael Smith](https://github.com/MikaelSmith)
 * [Shenil Dodhia](https://github.com/shenil)
+* [Tom Hoenderdos](https://github.com/tomhoenderdos)
 
 [GitHub Account]: https://github.com/signup/free "GitHub Signup"
 [GitHub Issues]:  https://github.com/copiousfreetime/stickler/issues "Stickler Issues"

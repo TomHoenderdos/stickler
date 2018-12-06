@@ -13,7 +13,7 @@ module Stickler::Repository
     # Return the URI of the repo
     #
     def uri
-      raise NotImplementedError, not_implemented_msg( :uri )
+      raise NotImplementedError, not_implemented_msg(:uri)
     end
 
     #
@@ -24,7 +24,7 @@ module Stickler::Repository
     #
     #
     def gems_uri
-      raise NotImplementedError, not_implemented_msg( :gems_uri )
+      raise NotImplementedError, not_implemented_msg(:gems_uri)
     end
 
     #
@@ -34,8 +34,8 @@ module Stickler::Repository
     # Given a SpecLite like object, return a URI that can be used
     # to directly access the gem in the repository.
     #
-    def uri_for_gem( spec )
-      raise NotImplementedError, not_implemented_msg( :uri_for_gem )
+    def uri_for_gem(_spec)
+      raise NotImplementedError, not_implemented_msg(:uri_for_gem)
     end
 
     #
@@ -51,8 +51,8 @@ module Stickler::Repository
     # When one or matches is found, the Array will contain contain
     # Stickler::SpecLite instances.
     #
-    def search_for( spec )
-      raise NotImplementedError, not_implemented_msg( :search_for )
+    def search_for(_spec)
+      raise NotImplementedError, not_implemented_msg(:search_for)
     end
 
     #
@@ -70,8 +70,8 @@ module Stickler::Repository
     # If the gem pushed already exists, then a Stickler::Repository::Error is
     # raised.
     #
-    def push( path_to_gem_file )
-      raise NotImplementedError, not_implemented_msg( :push )
+    def push(_path_to_gem_file)
+      raise NotImplementedError, not_implemented_msg(:push)
     end
 
     #
@@ -81,8 +81,8 @@ module Stickler::Repository
     # Remove the gem matching the spec completely from the respository.
     # Return +true+ if the gem was removed, +false+ otherwise
     #
-    def delete( spec )
-      raise NotImplementedError, not_implemented_msg( :delete)
+    def delete(_spec)
+      raise NotImplementedError, not_implemented_msg(:delete)
     end
 
     #
@@ -105,8 +105,8 @@ module Stickler::Repository
     #
     # If the gem described by spec does not exist, nil is returned.
     #
-    def yank( spec )
-      raise NotImplementedError, not_implemented_msg( :yank )
+    def yank(_spec)
+      raise NotImplementedError, not_implemented_msg(:yank)
     end
 
     #
@@ -121,8 +121,8 @@ module Stickler::Repository
     # If the gem is sucessfully put back into the index then true is returned.
     # Otherwise nil is returned
     #
-    def unyank( spec )
-      raise NotImplementedError, not_implemented_msg( :unyank )
+    def unyank(_spec)
+      raise NotImplementedError, not_implemented_msg(:unyank)
     end
 
     #
@@ -135,8 +135,8 @@ module Stickler::Repository
     #
     # If the gem described by spec does not exist, nil is returned.
     #
-    def get( spec )
-      raise NotImplementedError, not_implemented_msg( :get )
+    def get(_spec)
+      raise NotImplementedError, not_implemented_msg(:get)
     end
 
     #
@@ -152,31 +152,33 @@ module Stickler::Repository
     # If the gem described by spec does not exist, nil is returned.
     # If the gem described by spec does not exist, the block is not called.
     #
-    def open( spec, &block )
-      raise NotImplementedError, not_implemented_msg( :open )
+    def open(_spec)
+      raise NotImplementedError, not_implemented_msg(:open)
     end
 
     # :stopdoc:
     def self.api_methods
       %w[
-          delete
-          gems_uri
-          get
-          open
-          push
-          search_for
-          uri
-          uri_for_gem
-          yank
-        ]
+        delete
+        gems_uri
+        get
+        open
+        push
+        search_for
+        uri
+        uri_for_gem
+        yank
+      ]
     end
     # :startdoc:
 
     private
+
     # :stopdoc:
-    def not_implemented_msg( method )
+    def not_implemented_msg(method)
       "Please implement #{self.class.name}##{method}"
     end
+
     # :startdoc:
   end
 end

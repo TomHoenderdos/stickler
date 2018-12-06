@@ -16,24 +16,25 @@ module Stickler
     attr_reader :platform
     attr_reader :platform_string
 
-    def initialize( name, version, platform = Gem::Platform::RUBY )
+    def initialize(name, version, platform = Gem::Platform::RUBY)
       @name = name
-      @version = Gem::Version.new( version )
+      @version = Gem::Version.new(version)
       @platform_string = platform.to_s
-      @platform = Gem::Platform.new( platform )
+      @platform = Gem::Platform.new(platform)
     end
 
     def full_name
       "#{name}-#{version_platform}"
     end
-    alias :to_s :full_name
+
+    alias to_s full_name
 
     def file_name
-      full_name + ".gem"
+      full_name + '.gem'
     end
 
     def spec_file_name
-      full_name + ".gemspec"
+      full_name + '.gemspec'
     end
 
     def name_version
@@ -41,7 +42,7 @@ module Stickler
     end
 
     def version_platform
-      if platform == Gem::Platform::RUBY or platform.nil? then
+      if (platform == Gem::Platform::RUBY) || platform.nil?
         version.to_s
       else
         "#{version}-#{platform_string}"
@@ -53,54 +54,56 @@ module Stickler
     end
 
     def to_a
-      [ name, version.to_s, platform_string ]
+      [name, version.to_s, platform_string]
     end
 
-    # 
+    #
     # Convert to the array format used by rubygems itself
     #
     def to_rubygems_a
-      [ name, version, platform_string ]
+      [name, version, platform_string]
     end
 
     #
     # Lets be comparable!
     #
     def <=>(other)
-      return 0 if other.object_id == self.object_id
-      other = coerce( other )
+      return 0 if other.object_id == object_id
 
-      [ :name, :version, :platform_string ].each do |method|
-        us, them = self.send( method ), other.send( method )
-        result = us.<=>( them )
-        return result unless 0 == result
+      other = coerce(other)
+
+      %i[name version platform_string].each do |method|
+        us = send(method)
+        them = other.send(method)
+        result = us.<=>(them)
+        return result unless result == 0
       end
 
-      return 0
+      0
     end
 
     #
     # See if another Spec is the same as this spec
     #
     def =~(other)
-      other = coerce( other )
-      return (other and 
-              self.name == other.name and
-              self.version.to_s == other.version.to_s and
-              self.platform_string == other.platform_string )
+      other = coerce(other)
+      (other &&
+              (name == other.name) &&
+              (version.to_s == other.version.to_s) &&
+              (platform_string == other.platform_string))
     end
 
     private
 
-    def coerce( other )
-      if self.class === other then
+    def coerce(other)
+      if self.class === other
         other
-      elsif other.respond_to?( :name ) and 
-            other.respond_to?( :version ) and 
-            other.respond_to?( :platform_string ) then
-        SpecLite.new( other.name, other.version, other.platform_string )
+      elsif other.respond_to?(:name) &&
+            other.respond_to?(:version) &&
+            other.respond_to?(:platform_string)
+        SpecLite.new(other.name, other.version, other.platform_string)
       else
-        return false
+        false
       end
     end
   end

@@ -7,9 +7,10 @@ module Stickler
   #
   class GemContainer
     attr_reader :path
-    def initialize( gem_file_path )
-      @path      = gem_file_path
-      @container = load_container( path )
+
+    def initialize(gem_file_path)
+      @path = gem_file_path
+      @container = load_container(path)
     end
 
     def spec
@@ -22,18 +23,20 @@ module Stickler
     # otherwise fall back to the older method of using Gem::Format
     begin
       require 'rubygems/package'
-      def load_container( path )
-        Gem::Package.new( path )
+
+      def load_container(path)
+        Gem::Package.new(path)
       end
     rescue LoadError
       puts "Unable to load 'rubygems/package' falling back to Gem::Format"
       begin
         require 'rubygems/format'
-        def load_container( path )
-          Gem::Format.from_file_by_path( path )
+
+        def load_container(path)
+          Gem::Format.from_file_by_path(path)
         end
       rescue LoadError
-        abort "Failure to load rubygems/format"
+        abort 'Failure to load rubygems/format'
       end
     end
   end

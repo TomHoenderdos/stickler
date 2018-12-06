@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------------
 # man pages
 #------------------------------------------------------------------------------
-desc "Create the man pages"
+desc 'Create the man pages'
 task :man do
-  sh "ronn --roff #{FileList["man/*.ronn"]}"
+  sh "ronn --roff #{FileList['man/*.ronn']}"
 end

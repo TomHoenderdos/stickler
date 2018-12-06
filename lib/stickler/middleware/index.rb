@@ -48,31 +48,31 @@ module Stickler::Middleware
     include Stickler::Middleware::Helpers::Specs
     include Stickler::Logable
 
-    NAME_VERSION_PLATFORM_REGEX = "(.+)-([0-9.]+[0-9a-z.]*)(?:-(.+))?"
+    NAME_VERSION_PLATFORM_REGEX = '(.+)-([0-9.]+[0-9a-z.]*)(?:-(.+))?'.freeze
 
     # The respository of the Index is a Repository::Null
     attr_reader :repo
 
-    server_path = Stickler::Paths.lib_path( "stickler", "server" )
+    server_path = Stickler::Paths.lib_path('stickler', 'server')
 
-    set :views,         File.join( server_path, "views" )
-    set :public_folder, File.join( server_path, "public" )
-    set :static,        true
+    set :views, File.join(server_path, 'views')
+    set :public_folder, File.join(server_path, 'public')
+    set :static, true
 
-    def initialize( app, opts = {} )
-      @app           = app
-      @repo          = ::Stickler::Repository::Null.new
-      @serve_indexes = opts.has_key?( :serve_indexes ) ? opts[:serve_indexes] : true
-      super( app )
+    def initialize(app, opts = {})
+      @app = app
+      @repo = ::Stickler::Repository::Null.new
+      @serve_indexes = opts.key?(:serve_indexes) ? opts[:serve_indexes] : true
+      super(app)
     end
 
     before do
-      response["Date"] = @repo.last_modified_time.rfc2822
-      cache_control( 'no-cache' )
+      response['Date'] = @repo.last_modified_time.rfc2822
+      cache_control('no-cache')
     end
 
     get '/' do
-      if @serve_indexes then 
+      if @serve_indexes
         erb :index
       else
         pass
@@ -82,32 +82,32 @@ module Stickler::Middleware
     #
     # Respond to the requests for the <b>all gems</b> index
     #
-    get %r{\A/specs.#{Gem.marshal_version}(\.gz)?\Z} do |compression|
-      serve_indexes( released_specs, compression )
+    get %r{/specs.#{Gem.marshal_version}(\.gz)?} do |compression|
+      serve_indexes(released_specs, compression)
     end
 
     #
     # Respond to the requests for the <b>latest gems</b> index
     #
-    get %r{\A/latest_specs.#{Gem.marshal_version}(\.gz)?\Z} do |compression|
-      serve_indexes( latest_specs, compression)
+    get %r{/latest_specs.#{Gem.marshal_version}(\.gz)?} do |compression|
+      serve_indexes(latest_specs, compression)
     end
 
     #
     # Respond to the request for the <b>pre release gems</b> index
     #
-    get %r{\A/prerelease_specs.#{Gem.marshal_version}(\.gz)?\Z} do |compression|
-      serve_indexes( prerelease_specs, compression )
+    get %r{/prerelease_specs.#{Gem.marshal_version}(\.gz)?} do |compression|
+      serve_indexes(prerelease_specs, compression)
     end
 
     #
     # Serve the indexes up as the response if @serve_indexes is true.  Otherwise
     # return false
     #
-    def serve_indexes( specs, with_compression = :none )
-      if @serve_indexes then
-        self.compression = to_compression_flag( with_compression )
-        return marshalled_specs( specs )
+    def serve_indexes(specs, with_compression = :none)
+      if @serve_indexes
+        self.compression = to_compression_flag(with_compression)
+        marshalled_specs(specs)
       else
         pass
       end
@@ -117,12 +117,12 @@ module Stickler::Middleware
     # Actually serve up the gem.  This is really only used by the child classes.
     # an Index instance will never have any gems to return.
     #
-    get %r{\A/gems/#{NAME_VERSION_PLATFORM_REGEX}\.gem\Z} do
+    get %r{/gems/#{NAME_VERSION_PLATFORM_REGEX}\.gem} do
       name, version, platform = *params[:captures]
-      spec = Stickler::SpecLite.new( name, version, platform )
-      full_path = @repo.full_path_to_gem( spec )
-      if full_path and File.exist?( full_path )then
-        send_file( full_path, :type => "application/x-tar" )
+      spec = Stickler::SpecLite.new(name, version, platform)
+      full_path = @repo.full_path_to_gem(spec)
+      if full_path && File.exist?(full_path)
+        send_file(full_path, type: 'application/x-tar')
       else
         pass
       end
@@ -134,13 +134,13 @@ module Stickler::Middleware
     #
     # To support pre-releases the a-z has been added to the version
     #
-    get %r{\A/quick/Marshal.#{Gem.marshal_version}/#{NAME_VERSION_PLATFORM_REGEX}\.gemspec\.rz\Z} do
+    get %r{/quick/Marshal.#{Gem.marshal_version}/#{NAME_VERSION_PLATFORM_REGEX}\.gemspec\.rz} do
       name, version, platform = *params[:captures]
-      spec = Stickler::SpecLite.new( name, version, platform )
-      full_path = @repo.full_path_to_specification( spec )
-      if full_path and File.exist?( full_path ) then
+      spec = Stickler::SpecLite.new(name, version, platform)
+      full_path = @repo.full_path_to_specification(spec)
+      if full_path && File.exist?(full_path)
         self.compression = :deflate # always compressed
-        marshal( eval( IO.read( full_path ) ) )
+        marshal(eval(IO.read(full_path)))
       else
         pass
       end
@@ -150,9 +150,9 @@ module Stickler::Middleware
     # Convert to the array format used by gem servers
     # everywhere
     #
-    def marshalled_specs( spec_a )
-      a = spec_a.collect { |s| s.to_rubygems_a }
-      marshal( optimize_specs( a ) )
+    def marshalled_specs(spec_a)
+      a = spec_a.collect(&:to_rubygems_a)
+      marshal(optimize_specs(a))
     end
 
     #
@@ -160,30 +160,31 @@ module Stickler::Middleware
     # is take directly from RubyGems source code.  See rubygems/indexer.rb
     # #compact_specs
     #
-    def optimize_specs( specs )
-      names     = {}
-      versions  = {}
+    def optimize_specs(specs)
+      names = {}
+      versions = {}
       platforms = {}
 
       specs.collect do |(name, version, platform)|
-        names[name]         = name     unless names.include?( name )
-        versions[version]   = version  unless versions.include?( version )
-        platforms[platform] = platform unless platforms.include?( platform )
+        names[name] = name unless names.include?(name)
+        versions[version] = version unless versions.include?(version)
+        platforms[platform] = platform unless platforms.include?(platform)
 
-        [ names[name], versions[version], platforms[platform] ]
+        [names[name], versions[version], platforms[platform]]
       end
     end
 
-    def marshal( data )
+    def marshal(data)
       content_type 'application/octet-stream'
-      ::Marshal.dump( data )
+      ::Marshal.dump(data)
     end
 
-    def to_compression_flag( with_compression )
-      return with_compression if [ :gzip, :deflate, :none ].include?( with_compression )
-      return :gzip            if with_compression =~ /\.gz\Z/i
-      return :deflate         if with_compression =~ /\.(Z|rz)\Z/i
-      return :none
+    def to_compression_flag(with_compression)
+      return with_compression if %i[gzip deflate none].include?(with_compression)
+      return :gzip if with_compression =~ /\.gz\Z/i
+      return :deflate if with_compression =~ /\.(Z|rz)\Z/i
+
+      :none
     end
   end
 end

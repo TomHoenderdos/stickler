@@ -1,7 +1,8 @@
 require 'stickler/middleware/index'
+
 module Stickler::Middleware
   #
-  # A Sinatra middleware that implements the HTTP portions of a Modern gem server.  
+  # A Sinatra middleware that implements the HTTP portions of a Modern gem server.
   # It sits on top of a Repository::Local and serves up the gems in it.
   #
   # It utilizies a Stickler::Repository::Local, and the :repo_root option
@@ -24,11 +25,10 @@ module Stickler::Middleware
   #                                    :serve_indexes => true
   #
   class Local < ::Stickler::Middleware::Index
-    def initialize( app = nil, opts = {} )
-      super( app, opts )
+    def initialize(app = nil, opts = {})
+      super(app, opts)
       # overwrite the repo that is set in the parent
-      @repo      = ::Stickler::Repository::Local.new( opts[:repo_root] )
+      @repo = ::Stickler::Repository::Local.new(opts[:repo_root])
     end
-
   end
 end

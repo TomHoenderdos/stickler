@@ -8,13 +8,18 @@ module Stickler::Middleware
     # compression may be set to one of the following, all others will be
     # ignored.
     #
-    # <b>:gzip</b>::    use Gem.gzip
+    # <b>:gzip</b>::    use Gem::Util.gzip
     # <b>:deflate</b>:: use Gem.deflate
     # <b>nil</b>::      no compression
     #
     module Compression
-      def compression=( type ) env['stickler.compression'] = type end
-      def compression()        env['stickler.compression']        end
+      def compression=(type)
+        env["stickler.compression"] = type
+      end
+
+      def compression
+        env["stickler.compression"]
+      end
     end
 
     #
@@ -40,36 +45,36 @@ module Stickler::Middleware
       # return the list of all the specs in all the repos
       #
       def specs
-        collect_specs_via( :specs )
+        collect_specs_via(:specs)
       end
 
       #
       # return the list of all the latest_specs in all the repos
       #
       def latest_specs
-        collect_specs_via( :latest_specs )
+        collect_specs_via(:latest_specs)
       end
 
       #
       # return the list of all the pre-release specs
       #
       def prerelease_specs
-        collect_specs_via( :prerelease_specs )
+        collect_specs_via(:prerelease_specs)
       end
 
       #
       # return just the list of the releeased specs in all the repos
       #
       def released_specs
-        collect_specs_via( :released_specs )
+        collect_specs_via(:released_specs)
       end
 
       #
       # Collect all the specs via a call on each Repository
       #
-      def collect_specs_via( method )
+      def collect_specs_via(method)
         specs_by_repo.values.collect do |idx|
-          idx.send( method )
+          idx.send(method)
         end.flatten.sort
       end
 
@@ -77,7 +82,7 @@ module Stickler::Middleware
       # return the specs as a hash of lists, keyedy by gemname
       #
       def specs_by_name
-        specs_grouped_by_name( specs )
+        specs_grouped_by_name(specs)
       end
 
       #
@@ -85,24 +90,24 @@ module Stickler::Middleware
       # in this case are the first character of the gem name
       #
       def specs_by_first_upcase_char
-        by_char = Hash.new{ |h,k| h[k] = Array.new }
+        by_char = Hash.new { |h, k| h[k] = [] }
         specs.each do |spec|
           by_char[spec.name[0...1].upcase] << spec
         end
 
         by_char.keys.each { |k| by_char[k] = specs_grouped_by_name(by_char[k]) }
-        return by_char
+        by_char
       end
 
       #
       # Given a list of specs, this will group them by name
       #
-      def specs_grouped_by_name( spec_list )
-        by_name = Hash.new{ |h,k| h[k] = Array.new }
+      def specs_grouped_by_name(spec_list)
+        by_name = Hash.new { |h, k| h[k] = [] }
         spec_list.each do |spec|
           by_name[spec.name.downcase] << spec
         end
-        return by_name
+        by_name
       end
     end
   end

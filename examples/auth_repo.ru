@@ -3,13 +3,13 @@
 #
 # -*- vim: set ft=ruby: -*-
 #-----------------------------------------------------------------------
-$:.unshift File.expand_path( File.join( File.dirname(__FILE__), "..", "lib" ) )
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'stickler'
 
-tmp = File.expand_path( File.join( File.dirname( __FILE__ ), "..", "test", "tmp" ) )
+tmp = File.expand_path(File.join(File.dirname(__FILE__), '..', 'test', 'tmp'))
 
-use Rack::Auth::Basic, 'Secure Stickler' do |u,p|
-  (u == "stickler") and (p == "secret")
+use Rack::Auth::Basic, 'Secure Stickler' do |u, p|
+  (u == 'stickler') && (p == 'secret')
 end
-run Stickler::Server.new( tmp ).app
+run Stickler::Server.new(tmp).app

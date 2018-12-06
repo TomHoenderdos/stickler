@@ -1,16 +1,16 @@
 #!/usr/bin/env ruby
 
-require 'stickler'
-require 'trollop'
+require "stickler"
+require "optimist"
 
-SUB_COMMANDS = %w[ start stop ]
-exec_name = File.basename( $0 )
+SUB_COMMANDS = %w[start stop].freeze
+exec_name = File.basename($PROGRAM_NAME)
 
 # ---------------------------------------------------------------------
 # parse through the top level global options, this is intercept
 # --version and --help
 # ---------------------------------------------------------------------
-global_options = Trollop::options do
+global_options = Optimist::options do
   version "Stickler #{Stickler::VERSION}"
   banner <<-_
 Stickler server control
@@ -22,7 +22,7 @@ Stickler server control
     #{exec_name} stop --pid /var/run/stickler
 
   Options:
-_
+  _
   stop_on SUB_COMMANDS
 end
 
@@ -30,42 +30,43 @@ end
 # sub command processing
 # ---------------------------------------------------------------------
 cmd = ARGV.shift
-Trollop::die "unknown sub command #{cmd.inspect}" unless SUB_COMMANDS.include?( cmd )
+Optimist::die "unknown sub command #{cmd.inspect}" unless SUB_COMMANDS.include?(cmd)
 
 # ---------------------------------------------------------------------
 # All for the display of a default
 # ---------------------------------------------------------------------
-DEFAULT_HANDLERS = %w[ puma thin mongrel webrick ]
-def rack_handler( handlers = DEFAULT_HANDLERS )
-  handlers = Array( handlers )
+DEFAULT_HANDLERS = %w[puma thin mongrel webrick].freeze
+
+def rack_handler(handlers = DEFAULT_HANDLERS)
+  handlers = Array(handlers)
   handlers.each do |name|
     begin
-      klass = Rack::Handler.get( name.downcase )
-      return klass.name.gsub(/.*::/, '').downcase
+      klass = Rack::Handler.get(name.downcase)
+      return klass.name.gsub(/.*::/, "").downcase
     rescue LoadError
     rescue NameError
     end
   end
-  Trollop::die "No Server handler (#{handlers.join(",")}) found."
+  Optimist::die "No Server handler (#{handlers.join(",")}) found."
 end
 
 # ---------------------------------------------------------------------
 # option parsing of the sub command, all subcommands have the same
 # options
 # ---------------------------------------------------------------------
-rack_options = Trollop::options do
+rack_options = Optimist::options do
   banner <<-_
 Usage: #{exec_name} #{cmd} [options] /path/to/stickler/root
 
   Options:
-_
-  opt :daemonize, "Daemonize the server", :default => false
-  opt :host, "The host address to bind to", :type => String, :default =>'0.0.0.0'
-  opt :pid, "Path to write a pid file to after daemonizing", :type => String, :default => File.expand_path('stickler-server.pid')
-  opt :port, "The port to bind to", :type => :int, :default => 6789
-  opt :server, "The rack handler: #{DEFAULT_HANDLERS.join(', ')} etc", :type => String, :default => rack_handler
-  opt :debug, "Turn on debugging", :default => false
-  opt :warn, "Turn on ruby warnings", :default => false
+  _
+  opt :daemonize, "Daemonize the server", default: false
+  opt :host, "The host address to bind to", type: String, default: "0.0.0.0"
+  opt :pid, "Path to write a pid file to after daemonizing", type: String, default: File.expand_path("stickler-server.pid")
+  opt :port, "The port to bind to", type: :int, default: 6789
+  opt :server, "The rack handler: #{DEFAULT_HANDLERS.join(", ")} etc", type: String, default: rack_handler
+  opt :debug, "Turn on debugging", default: false
+  opt :warn, "Turn on ruby warnings", default: false
 end
 
 # case changes for rack handlers, don't ask my why.  I'm keeping the
@@ -77,31 +78,31 @@ rack_options[:Port] = rack_options.delete(:port)
 # validate the sole argument, the stickler root directory
 # ---------------------------------------------------------------------
 stickler_root = ARGV.shift
-Trollop::die "Stickler root argument required" unless stickler_root
+Optimist::die "Stickler root argument required" unless stickler_root
 
-stickler_root = File.expand_path( stickler_root )
-Trollop::die "Stickler root directory '#{stickler_root}' must already exist" unless File.directory?( stickler_root )
-Trollop::die "Stickler root directory '#{stickler_root}' must be writable" unless File.writable?( stickler_root )
+stickler_root = File.expand_path(stickler_root)
+Optimist::die "Stickler root directory '#{stickler_root}' must already exist" unless File.directory?(stickler_root)
+Optimist::die "Stickler root directory '#{stickler_root}' must be writable" unless File.writable?(stickler_root)
 
-rack_handler( rack_options[:server] )
-rack_options[:pid] ||= File.join(stickler_root, "#{exec_name}.pid" )
-rack_options[:app] = ::Stickler::Server.new( stickler_root ).app
+rack_handler(rack_options[:server])
+rack_options[:pid] ||= File.join(stickler_root, "#{exec_name}.pid")
+rack_options[:app] = ::Stickler::Server.new(stickler_root).app
 
 case cmd
 when "start"
   Rack::Server.start(rack_options)
 when "stop"
-  abort "pid file #{rack_options[:pid]} does not exist" unless File.exist?( rack_options[:pid] )
-  pid = Float( File.read( rack_options[:pid] ) ).to_i
-  Process.kill( "INT", pid )
+  abort "pid file #{rack_options[:pid]} does not exist" unless File.exist?(rack_options[:pid])
+  pid = Float(File.read(rack_options[:pid])).to_i
+  Process.kill("INT", pid)
   20.times do
     begin
-      Process.kill( 0, pid )
+      Process.kill(0, pid)
       sleep 0.1
     rescue Errno::ESRCH
       exit 0
     end
   end
-  Process.kill( "KILL", pid )
+  Process.kill("KILL", pid)
 end
 exit 0

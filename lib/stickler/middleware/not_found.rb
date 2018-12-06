@@ -5,7 +5,7 @@ module Stickler::Middleware
   # 4040 page.
   #
   class NotFound
-    def initialize( app = nil )
+    def initialize(_app = nil)
       @body = <<-_
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
@@ -53,11 +53,10 @@ module Stickler::Middleware
       @size = @body.size.to_s
     end
 
-    def call( env )
-      [ 404, 
-        { 'Content-Type' => 'text/html', 'Content-Length' => @size },
-        [ @body ]
-      ]
+    def call(_env)
+      [404,
+       { 'Content-Type' => 'text/html', 'Content-Length' => @size },
+       [@body]]
     end
   end
 end

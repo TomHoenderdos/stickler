@@ -3,7 +3,7 @@ module Stickler
     class Yank < Stickler::Client
       def self.banner
 <<-_
-Remove a gem from the gemserver's index.  
+Remove a gem from the gemserver's index.
 It will still be available for direct download.
 
 Usage: stickler yank [options] --gem-version x.y.z gem
@@ -24,7 +24,7 @@ _
       def parse( argv )
         gem_name = nil
         opts = super( argv ) do |p,o|
-          raise Trollop::CommandlineError, "At least one gem is required to yank" if p.leftovers.empty?
+          raise Optimist::CommandlineError, "At least one gem is required to yank" if p.leftovers.empty?
           gem_name = p.leftovers.shift
         end
         opts[:gem_name] = gem_name

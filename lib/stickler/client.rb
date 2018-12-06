@@ -1,9 +1,8 @@
-require 'trollop'
-require 'stickler/client/config_file'
+require "optimist"
+require "stickler/client/config_file"
 
 module Stickler
   class Client
-
     attr_reader :argv
     attr_reader :sources
 
@@ -14,39 +13,39 @@ module Stickler
     # Create a new client
     #
     # Takes an argv like array as a parameter.
-    def initialize( argv = ARGV )
-      @argv = argv.collect { |e| e.dup }
+    def initialize(argv = ARGV)
+      @argv = argv.collect(&:dup)
     end
 
     def parser
       me = self # scoping forces this
-      @parser ||= Trollop::Parser.new do
+      @parser ||= Optimist::Parser.new do
         banner me.class.banner
-        opt :server, "The gem or stickler server URL", :type => :string, :default => Client.config.server
-        opt :debug, "Output debug information for the server interaction", :default => false
+        opt :server, "The gem or stickler server URL", type: :string, default: Client.config.server
+        opt :debug, "Output debug information for the server interaction", default: false
       end
     end
 
-    def parse( argv )
-      opts = Trollop::with_standard_exception_handling( parser ) do
-        o = parser.parse( argv )
-        yield( parser, o ) if block_given?
+    def parse(argv)
+      opts = Optimist::with_standard_exception_handling(parser) do
+        o = parser.parse(argv)
+        yield(parser, o) if block_given?
         return o
       end
-      return opts
+      opts
     end
 
-    def remote_repo_for( opts )
-      Stickler::Repository::Remote.new( opts[:server], :debug => opts[:debug] ) 
+    def remote_repo_for(opts)
+      Stickler::Repository::Remote.new(opts[:server], debug: opts[:debug])
     end
   end
 end
 
-require 'stickler/client/config'
-require 'stickler/client/delete'
-require 'stickler/client/list'
-require 'stickler/client/mirror'
-require 'stickler/client/push'
-require 'stickler/client/unyank'
-require 'stickler/client/yank'
-require 'stickler/client/latest-version'
+require "stickler/client/config"
+require "stickler/client/delete"
+require "stickler/client/list"
+require "stickler/client/mirror"
+require "stickler/client/push"
+require "stickler/client/unyank"
+require "stickler/client/yank"
+require "stickler/client/latest-version"

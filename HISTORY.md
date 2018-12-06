@@ -2,6 +2,10 @@ Stickler Changelog
 ==================
 Jeremy Hinegardner <jeremy@copiousfreetime.org>
 
+Version 2.4.4 - 2018-12-06
+--------------------------
+* Updated gems
+
 Version 2.4.3 - 2015-10-XX
 --------------------------
 * Relicense as MIT
@@ -83,7 +87,7 @@ Version 0.1.2 - 2009-02-19
 
 Version 0.1.1 - 2008-10-12
 --------------------------
-* remove unnecessary require 'progressbar' 
+* remove unnecessary require 'progressbar'
 
 Version 0.1.0 - 2008-10-10
 --------------------------

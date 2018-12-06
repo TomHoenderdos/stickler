@@ -10,9 +10,9 @@
 Stickler is a tool to organize and maintain an internal gem repository.
 Primarily, you would want to use Stickler if:
 
-1. You have proprietary gems that you want to have available via a gem server so 
+1. You have proprietary gems that you want to have available via a gem server so
    you may `gem install` them.
-2. You would like to have a local mirror of third party gems from either 
+2. You would like to have a local mirror of third party gems from either
    http://rubygems.org or some other gem server.
 3. You want both (1) and (2) in the same server.
 
@@ -72,8 +72,8 @@ server `stickler-server` and then use `stickler` to interact with it.
 
     % stickler mirror --gem-version 1.4.3 logging
     Asking http://localhost:6789/ to mirror logging-1.4.3 from rubygems.org : OK -> http://localhost:6789/gems/logging-1.4.3.gem
-    % stickler mirror --gem-version 1.16.2 trollop
-    Asking http://localhost:6789/ to mirror trollop-1.16.2 from rubygems.org : OK -> http://localhost:6789/gems/trollop-1.16.2.gem
+    % stickler mirror --gem-version 3.0.0 optimist
+    Asking http://localhost:6789/ to mirror optimist-3.0.0 from rubygems.org : OK -> http://localhost:6789/gems/optimist-3.0.0.gem
 
 ### Look at all the gems installed in your stickler server
 

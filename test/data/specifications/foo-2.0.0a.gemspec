@@ -10,17 +10,16 @@ Gem::Specification.new do |s|
   s.description = %q{foo gem prerelease}
   s.email = %q{jeremy@hinegardner.org}
   s.files = ["README.rdoc", "lib/foo.rb", "bin/foo", "Rakefile", "foo.gemspec"]
-  s.has_rdoc = false
   s.homepage = %q{http://github.com/copiousfreetime/stickler}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{foo gem prerelease}
 
-  if s.respond_to? :specification_version then
+  if s.respond_to? :specification_version
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new("1.2.0")
       s.add_runtime_dependency(%q<rake>, [">= 0"])
     else
       s.add_dependency(%q<rake>, [">= 0"])
@@ -29,4 +28,3 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rake>, [">= 0"])
   end
 end
-

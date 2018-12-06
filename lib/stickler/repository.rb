@@ -1,8 +1,9 @@
 module Stickler
   module Repository
-    class Error < ::Stickler::Error ; end 
+    class Error < ::Stickler::Error; end
   end
 end
+
 require 'stickler/repository/api'
 require 'stickler/repository/basic_authenticator'
 require 'stickler/repository/index'

@@ -2,6 +2,7 @@ module Stickler
   module Middleware
   end
 end
+
 require 'stickler/middleware/helpers'
 require 'stickler/middleware/compression'
 require 'stickler/middleware/gemcutter'

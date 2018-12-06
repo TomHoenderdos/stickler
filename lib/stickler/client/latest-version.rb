@@ -8,26 +8,27 @@ Prints the latest version of a gem
 Usage: stickler latest-version gem-name
 
   Options:
-_
+        _
       end
 
-      def parse( argv )
+      def parse(argv)
         gem_name = nil
-        opts = super( argv ) do |p,o|
-          raise Trollop::CommandlineError, "At lest one gem-name is required" if p.leftovers.empty?
+        opts = super(argv) do |p, _o|
+          raise Optimist::CommandlineError, 'At lest one gem-name is required' if p.leftovers.empty?
+
           gem_name = p.leftovers.shift
         end
         opts[:gem_name] = gem_name
-        return opts
+        opts
       end
 
       def run
-        opts  = parse( self.argv )
-        repo  = remote_repo_for( opts )
-        match = repo.latest_specs_list.find do |name, version, platform|
+        opts = parse(argv)
+        repo = remote_repo_for(opts)
+        match = repo.latest_specs_list.find do |name, _version, _platform|
           name == opts[:gem_name]
         end
-        if match then
+        if match
           $stdout.puts match[1]
         else
           $stdout.puts "Gem #{opts[:gem_name]} not found in remote repository"

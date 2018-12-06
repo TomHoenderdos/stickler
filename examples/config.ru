@@ -3,10 +3,10 @@
 #
 # -*- vim: set ft=ruby: -*-
 #-----------------------------------------------------------------------
-$:.unshift File.expand_path( File.join( File.dirname(__FILE__), "..", "lib" ) )
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'stickler'
 
-tmp = File.expand_path( File.join( File.dirname( __FILE__ ), "..", "tmp" ) )
+tmp = File.expand_path(File.join(File.dirname(__FILE__), '..', 'tmp'))
 
-run Stickler::Server.new( tmp ).app
+run Stickler::Server.new(tmp).app
