@@ -18,7 +18,7 @@ module Stickler
 
     def parse(text)
       parts = partition(text)
-      @gem_dependencies = parse_dependencies(parts['GEM'])
+      @gem_dependencies = parse_dependencies(parts["GEM"])
     end
 
     def parse_dependencies(lines)
@@ -34,7 +34,7 @@ module Stickler
     end
 
     def drop_until_specs(lines)
-      lines.drop_while { |l| %w[remote specs].include?(l.strip.split(':').first) }
+      lines.drop_while { |l| %w[remote specs].include?(l.strip.split(":").first) }
     end
 
     def partition(text)

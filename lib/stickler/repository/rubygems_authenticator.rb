@@ -1,4 +1,4 @@
-require 'addressable/uri'
+require "addressable/uri"
 
 module Stickler::Repository
   #
@@ -8,15 +8,15 @@ module Stickler::Repository
   #
   class RubygemsAuthenticator
     def self.rubygems_uri
-      @rubygems_uri ||= Addressable::URI.parse( "https://rubygems.org" )
+      @rubygems_uri ||= Addressable::URI.parse("https://rubygems.org")
     end
 
-    def self.handles?( uri )
-      return ( uri.scheme == rubygems_uri.scheme ) &&
-             ( uri.host   == rubygems_uri.host )
+    def self.handles?(uri)
+      return (uri.scheme == rubygems_uri.scheme) &&
+             (uri.host == rubygems_uri.host)
     end
 
-    def initialize( uri )
+    def initialize(uri)
       # do nothing
     end
 
@@ -27,6 +27,5 @@ module Stickler::Repository
     def rubygems_uri
       self.class.rubygems_uri
     end
-
   end
 end

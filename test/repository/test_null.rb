@@ -1,9 +1,10 @@
-require 'test_stickler'
-require 'repository/test_api'
+require "test_stickler"
+require "repository/test_api"
 
 module Stickler
   class NullRepoistoryTest < Test
     include RepositoryApiTests
+
     def repo
       @repo ||= ::Stickler::Repository::Null.new
     end

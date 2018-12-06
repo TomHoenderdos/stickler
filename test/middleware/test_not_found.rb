@@ -1,8 +1,9 @@
-require 'test_stickler'
+require "test_stickler"
 
 module Stickler
   class MiddlewareNotFound < Test
     include Rack::Test::Methods
+
     def app
       ::Stickler::Middleware::NotFound.new
     end
@@ -16,11 +17,11 @@ module Stickler
     end
 
     def test_resturns_html_page
-      assert_equal 'text/html', last_response.content_type
+      assert_equal "text/html", last_response.content_type
     end
 
-    def test_body_says_look_elsewhere 
-     assert_match( /Not Found/, last_response.body)
+    def test_body_says_look_elsewhere
+      assert_match(/Not Found/, last_response.body)
     end
   end
 end

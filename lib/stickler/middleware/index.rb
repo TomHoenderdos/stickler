@@ -48,15 +48,15 @@ module Stickler::Middleware
     include Stickler::Middleware::Helpers::Specs
     include Stickler::Logable
 
-    NAME_VERSION_PLATFORM_REGEX = '(.+)-([0-9.]+[0-9a-z.]*)(?:-(.+))?'.freeze
+    NAME_VERSION_PLATFORM_REGEX = "(.+)-([0-9.]+[0-9a-z.]*)(?:-(.+))?".freeze
 
     # The respository of the Index is a Repository::Null
     attr_reader :repo
 
-    server_path = Stickler::Paths.lib_path('stickler', 'server')
+    server_path = Stickler::Paths.lib_path("stickler", "server")
 
-    set :views, File.join(server_path, 'views')
-    set :public_folder, File.join(server_path, 'public')
+    set :views, File.join(server_path, "views")
+    set :public_folder, File.join(server_path, "public")
     set :static, true
 
     def initialize(app, opts = {})
@@ -67,11 +67,11 @@ module Stickler::Middleware
     end
 
     before do
-      response['Date'] = @repo.last_modified_time.rfc2822
-      cache_control('no-cache')
+      response["Date"] = @repo.last_modified_time.rfc2822
+      cache_control("no-cache")
     end
 
-    get '/' do
+    get "/" do
       if @serve_indexes
         erb :index
       else
@@ -122,7 +122,7 @@ module Stickler::Middleware
       spec = Stickler::SpecLite.new(name, version, platform)
       full_path = @repo.full_path_to_gem(spec)
       if full_path && File.exist?(full_path)
-        send_file(full_path, type: 'application/x-tar')
+        send_file(full_path, type: "application/x-tar")
       else
         pass
       end
@@ -175,7 +175,7 @@ module Stickler::Middleware
     end
 
     def marshal(data)
-      content_type 'application/octet-stream'
+      content_type "application/octet-stream"
       ::Marshal.dump(data)
     end
 

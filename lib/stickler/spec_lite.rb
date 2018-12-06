@@ -1,5 +1,5 @@
-require 'rubygems/platform'
-require 'rubygems/version'
+require "rubygems/platform"
+require "rubygems/version"
 
 module Stickler
   #
@@ -30,11 +30,11 @@ module Stickler
     alias to_s full_name
 
     def file_name
-      full_name + '.gem'
+      full_name + ".gem"
     end
 
     def spec_file_name
-      full_name + '.gemspec'
+      full_name + ".gemspec"
     end
 
     def name_version
@@ -88,9 +88,9 @@ module Stickler
     def =~(other)
       other = coerce(other)
       (other &&
-              (name == other.name) &&
-              (version.to_s == other.version.to_s) &&
-              (platform_string == other.platform_string))
+       (name == other.name) &&
+       (version.to_s == other.version.to_s) &&
+       (platform_string == other.platform_string))
     end
 
     private

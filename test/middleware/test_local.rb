@@ -1,4 +1,4 @@
-require 'test_stickler'
+require "test_stickler"
 
 module Stickler
   class MiddlewareLocalTest < Test
@@ -25,7 +25,7 @@ module Stickler
       destroy_scratch_dir
     end
 
-    def test_returns_the_same_bytes_as_gem_indexer 
+    def test_returns_the_same_bytes_as_gem_indexer
       [
         "/specs.#{Gem.marshal_version}",
         "/specs.#{Gem.marshal_version}.gz",
@@ -39,10 +39,10 @@ module Stickler
         "/quick/Marshal.#{Gem.marshal_version}/baz-3.1.4-java.gemspec.rz",
         "/quick/Marshal.#{Gem.marshal_version}/baz-3.1.4.gemspec.rz",
       ].each do |path|
-        response  = get( path )
-        need, got = validate_contents( response.body,
-                                       IO.read( File.join(@scratch_datadir, path) ),
-                                       response.content_type )
+        response = get(path)
+        need, got = validate_contents(response.body,
+                                      IO.read(File.join(@scratch_datadir, path)),
+                                      response.content_type)
         assert_equal need, got, "Match failure for #{path}"
       end
     end
@@ -58,16 +58,16 @@ module Stickler
       destroy_scratch_dir
     end
 
-    def test_returns_the_same_bytes_as_gem_indexer 
+    def test_returns_the_same_bytes_as_gem_indexer
       [
         "/Marshal.#{Gem.marshal_version}",
         "/Marshal.#{Gem.marshal_version}.Z",
       ].each do |path|
         skip "Not testing legacy indexes at the moment"
-        response  = get( path )
-        need, got = validate_contents( response.body,
-                                       IO.read( File.join(@scratch_datadir, path) ),
-                                       response.content_type )
+        response = get(path)
+        need, got = validate_contents(response.body,
+                                      IO.read(File.join(@scratch_datadir, path)),
+                                      response.content_type)
         assert_equal need, got, "Match failure for #{path}"
       end
     end

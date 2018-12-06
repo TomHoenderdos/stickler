@@ -10,19 +10,21 @@ module Stickler::Repository
     # the root directory of the repository, this is set in the constructor
     attr_reader :root_dir
 
-    def initialize( root_dir = self.class.name )
+    def initialize(root_dir = self.class.name)
       @root_dir = root_dir
     end
 
-    def empty_string( junk = "" )
+    def empty_string(junk = "")
       ""
     end
+
     alias :uri :empty_string
     alias :gems_uri :empty_string
 
-    def nilish( junk = nil, &block )
+    def nilish(junk = nil, &block)
       nil
     end
+
     alias :push :nilish
     alias :delete :nilish
     alias :yank :nilish
@@ -36,9 +38,10 @@ module Stickler::Repository
       Time.now
     end
 
-    def empty_array( junk = nil )
+    def empty_array(junk = nil)
       []
     end
+
     alias :specs :empty_array
     alias :latest_specs :empty_array
     alias :search_for :empty_array
@@ -50,6 +53,5 @@ module Stickler::Repository
     def latest_specs
       Array.new
     end
-
   end
 end

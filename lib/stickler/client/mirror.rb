@@ -1,4 +1,4 @@
-require 'stickler/repository/remote_mirror'
+require "stickler/repository/remote_mirror"
 
 module Stickler
   class Client
@@ -19,9 +19,9 @@ Usage: stickler mirror [options] --gem-version x.y.z gem
       def parser
         unless @parser
           @parser = super
-          @parser.opt(:upstream, 'The upstream gem server from which to pull', type: :string, default: Client.config.upstream)
-          @parser.opt(:gem_version, 'The version of the gem to mirror', type: :string)
-          @parser.opt(:platform, 'The platform of the gem to mirror', type: :string, default: ::Gem::Platform::RUBY)
+          @parser.opt(:upstream, "The upstream gem server from which to pull", type: :string, default: Client.config.upstream)
+          @parser.opt(:gem_version, "The version of the gem to mirror", type: :string)
+          @parser.opt(:platform, "The platform of the gem to mirror", type: :string, default: ::Gem::Platform::RUBY)
         end
         @parser
       end
@@ -30,7 +30,7 @@ Usage: stickler mirror [options] --gem-version x.y.z gem
         gem_name = nil
         gemfile_lock = nil
         opts = super(argv) do |p, o|
-          raise Optimist::CommandlineError, 'A Gemfile.lock or a gem name is required to mirror' if p.leftovers.empty?
+          raise Optimist::CommandlineError, "A Gemfile.lock or a gem name is required to mirror" if p.leftovers.empty?
 
           if o[:gem_version]
             gem_name = p.leftovers.shift
@@ -61,7 +61,7 @@ Usage: stickler mirror [options] --gem-version x.y.z gem
           parser = Stickler::GemfileLockParser.new(opts[:gemfile_lock])
           return parser.gem_dependencies
         end
-        raise Sticker::Error, 'No gem name, or gemfile lock... no idea what to do'
+        raise Sticker::Error, "No gem name, or gemfile lock... no idea what to do"
       end
 
       def mirror_one_spec(repo, spec, upstream_host)
@@ -69,7 +69,7 @@ Usage: stickler mirror [options] --gem-version x.y.z gem
         $stdout.flush
 
         resp = repo.mirror(spec, upstream_host)
-        $stdout.puts "OK -> #{repo.uri.join(resp.headers['Location'])}"
+        $stdout.puts "OK -> #{repo.uri.join(resp.headers["Location"])}"
       rescue Stickler::Repository::Error => e
         $stdout.puts "ERROR: #{e.message}"
       rescue StandardError => e

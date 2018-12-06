@@ -1,7 +1,7 @@
-require 'stickler/repository/index'
-require 'addressable/uri'
-require 'tempfile'
-require 'forwardable'
+require "stickler/repository/index"
+require "addressable/uri"
+require "tempfile"
+require "forwardable"
 
 module Stickler::Repository
   #
@@ -10,12 +10,13 @@ module Stickler::Repository
   #
   # It currently has two subdirectories:
   #
-  # gems/           -> holding the .gem files 
+  # gems/           -> holding the .gem files
   # specifications/ -> holding the .gemspec files
   #
   #
   class Local
     class Error < ::Stickler::Repository::Error; end
+
     include Stickler::Logable
 
     # The name to give to this repository
@@ -74,16 +75,16 @@ module Stickler::Repository
     # of the repo is not nil, and different than the existing repo
     # an exception is raised.
     #
-    def self.new( root_dir, name = nil )
+    def self.new(root_dir, name = nil)
       repo = nil
       @mutex.synchronize do
-        local_key = File.expand_path( root_dir ) + File::SEPARATOR
+        local_key = File.expand_path(root_dir) + File::SEPARATOR
         repo = @repos[local_key]
-        if repo.nil? then
-          repo = super( local_key, name )
+        if repo.nil?
+          repo = super(local_key, name)
           @repos[local_key] = repo
         else
-          if name and (repo.name != name) then
+          if name and (repo.name != name)
             raise Error, "A repository already exists for #{root_dir} with name has the name #{repo.name} which conflicts with the given name #{name}"
           end
         end
@@ -91,40 +92,40 @@ module Stickler::Repository
       repo
     end
 
-    def initialize( root_dir, name = nil )
-      @root_dir = File.expand_path( root_dir ) + File::SEPARATOR
-      @name     = name || @root_dir
-      @gems_dir = File.join( @root_dir, 'gems/' )
-      @specifications_dir = File.join( @root_dir, 'specifications/' )
-      @temp_dir = File.join( @root_dir, "tmp/" )
+    def initialize(root_dir, name = nil)
+      @root_dir = File.expand_path(root_dir) + File::SEPARATOR
+      @name = name || @root_dir
+      @gems_dir = File.join(@root_dir, "gems/")
+      @specifications_dir = File.join(@root_dir, "specifications/")
+      @temp_dir = File.join(@root_dir, "tmp/")
 
       # setup the dirs before doing the index because the @specifications_dir
       # may not exist yet.
       setup_dirs
 
-      @index = ::Stickler::Repository::Index.new( @specifications_dir )
+      @index = ::Stickler::Repository::Index.new(@specifications_dir)
     end
 
     #
     # See Api#uri
     #
     def uri
-      @uri ||= Addressable::URI.convert_path( root_dir )
+      @uri ||= Addressable::URI.convert_path(root_dir)
     end
 
-    # 
+    #
     # See Api#gems_uri
     #
     def gems_uri
-      @gems_uri ||= Addressable::URI.convert_path( gems_dir )
+      @gems_uri ||= Addressable::URI.convert_path(gems_dir)
     end
 
     #
     # See Api#uri_from_gem
     #
-    def uri_for_gem( spec )
-      return nil unless gem_file_exist?( spec )
-      return self.gems_uri.join( spec.file_name )
+    def uri_for_gem(spec)
+      return nil unless gem_file_exist?(spec)
+      return self.gems_uri.join(spec.file_name)
     end
 
     #
@@ -132,42 +133,41 @@ module Stickler::Repository
     #
     extend Forwardable
     def_delegators :@index, :specs,
-                            :released_specs,
-                            :latest_specs,
-                            :prerelease_specs,
-                            :last_modified_time
+                   :released_specs,
+                   :latest_specs,
+                   :prerelease_specs,
+                   :last_modified_time
 
     #
     # See Api#search_for
     #
-    def search_for( spec )
-      return index.search( spec )
+    def search_for(spec)
+      return index.search(spec)
     end
 
     #
     # See Api#delete
     #
-    def delete( spec )
-      uninstall( spec )
+    def delete(spec)
+      uninstall(spec)
     end
 
-    # 
+    #
     # See Api#yank
     #
-    def yank( spec )
-      uninstall_specification( spec ) if specification_file_exist?( spec )
-      return uri_for_gem( spec )
+    def yank(spec)
+      uninstall_specification(spec) if specification_file_exist?(spec)
+      return uri_for_gem(spec)
     end
 
     #
     # See Api#unyank
     #
-    def unyank( spec )
-      return nil if specification_file_exist?( spec )
-      return nil unless gem_file_exist?( spec )
-      install_specification( spec )
+    def unyank(spec)
+      return nil if specification_file_exist?(spec)
+      return nil unless gem_file_exist?(spec)
+      install_specification(spec)
     end
-
 
     #
     # :call-seq:
@@ -177,22 +177,22 @@ module Stickler::Repository
     # that contains the binary stream that is a .gem file.  IO must respond to
     # #read and #rewind.
     #
-    def add( io )
+    def add(io)
       # spooling to a temp file because Gem::Format.from_io() closes the io
       # stream it is sent.  Why it does this, I do not know. This may be
       # removed once we are no longer using older rubygems
-      tempfile = Tempfile.new(  "uploaded-gem.", temp_dir )
-      tempfile.write( io.read )
+      tempfile = Tempfile.new("uploaded-gem.", temp_dir)
+      tempfile.write(io.read)
       tempfile.rewind
 
-      container = Stickler::GemContainer.new( tempfile.path )
-      spec      = Stickler::SpecLite.new( container.spec.name, container.spec.version, container.spec.platform )
-      specs     = search_for( spec )
+      container = Stickler::GemContainer.new(tempfile.path)
+      spec = Stickler::SpecLite.new(container.spec.name, container.spec.version, container.spec.platform)
+      specs = search_for(spec)
 
       raise Error, "gem #{spec.full_name} already exists" unless specs.empty?
 
       tempfile.rewind
-      return install( spec, tempfile )
+      return install(spec, tempfile)
     ensure
       tempfile.close!
     end
@@ -200,10 +200,10 @@ module Stickler::Repository
     #
     # See Api#push
     #
-    def push( path )
+    def push(path)
       result = nil
-      File.open( path ) do |io|
-        result = add( io )
+      File.open(path) do |io|
+        result = add(io)
       end
       return result
     end
@@ -211,19 +211,19 @@ module Stickler::Repository
     #
     # See Api#get
     #
-    def get( spec )
-      return IO.read( full_path_to_gem( spec ) ) if gem_file_exist?( spec )
+    def get(spec)
+      return IO.read(full_path_to_gem(spec)) if gem_file_exist?(spec)
       return nil
     end
 
     #
     # See Api#open
     #
-    def open( spec, &block )
-      return nil unless gem_file_exist?( spec )
-      path = full_path_to_gem( spec )
-      f = File.open( path, "rb" )
-      if block_given? then
+    def open(spec, &block)
+      return nil unless gem_file_exist?(spec)
+      path = full_path_to_gem(spec)
+      f = File.open(path, "rb")
+      if block_given?
         begin
           yield f
         ensure
@@ -235,77 +235,76 @@ module Stickler::Repository
       return nil
     end
 
-    def full_path_to_gem( spec )
-      File.join( gems_dir, spec.file_name )
+    def full_path_to_gem(spec)
+      File.join(gems_dir, spec.file_name)
     end
 
-    def full_path_to_specification( spec )
-      File.join( specifications_dir, spec.spec_file_name )
+    def full_path_to_specification(spec)
+      File.join(specifications_dir, spec.spec_file_name)
     end
 
-    def gem_file_exist?( spec )
-      File.exist?( full_path_to_gem( spec ) )
+    def gem_file_exist?(spec)
+      File.exist?(full_path_to_gem(spec))
     end
 
-    def specification_file_exist?( spec )
-      File.exist?( full_path_to_specification( spec ) )
+    def specification_file_exist?(spec)
+      File.exist?(full_path_to_specification(spec))
     end
-
 
     private
 
     def setup_dirs
-      [ root_dir, specifications_dir, gems_dir, temp_dir ].each do |dir|
-        FileUtils.mkdir_p( dir ) unless File.directory?( dir )
+      [root_dir, specifications_dir, gems_dir, temp_dir].each do |dir|
+        FileUtils.mkdir_p(dir) unless File.directory?(dir)
       end
     end
 
-    def install( spec, io )
-      install_gem( spec, io )
-      install_specification( spec )
+    def install(spec, io)
+      install_gem(spec, io)
+      install_specification(spec)
     end
 
-    def install_gem( spec, io )
-      File.open( full_path_to_gem( spec ) , "w+" ) do |of|
+    def install_gem(spec, io)
+      File.open(full_path_to_gem(spec), "w+") do |of|
         io.each do |str|
-          of.write( str )
+          of.write(str)
         end
       end
     end
 
-    def install_specification( spec )
-      gemspec = specification_from_gem_file( full_path_to_gem( spec ) )
-      File.open( full_path_to_specification( spec ) , "w+" ) do |f|
-        f.write( gemspec.to_ruby )
+    def install_specification(spec)
+      gemspec = specification_from_gem_file(full_path_to_gem(spec))
+      File.open(full_path_to_specification(spec), "w+") do |f|
+        f.write(gemspec.to_ruby)
       end
-      return speclite_from_specification( gemspec )
+      return speclite_from_specification(gemspec)
     end
 
-    def uninstall( spec )
-      uninstall_gem( spec )
-      uninstall_specification( spec )
+    def uninstall(spec)
+      uninstall_gem(spec)
+      uninstall_specification(spec)
     end
 
-    def uninstall_gem( spec )
-      remove_file( full_path_to_gem( spec ) )
+    def uninstall_gem(spec)
+      remove_file(full_path_to_gem(spec))
     end
 
-    def uninstall_specification( spec )
-      remove_file( full_path_to_specification( spec ) )
+    def uninstall_specification(spec)
+      remove_file(full_path_to_specification(spec))
     end
 
-    def remove_file( path )
-      return false unless File.exist?( path )
-      return true  if File.unlink( path ) > 0
+    def remove_file(path)
+      return false unless File.exist?(path)
+      return true if File.unlink(path) > 0
     end
 
-    def specification_from_gem_file( path )
-      container = Stickler::GemContainer.new( path )
+    def specification_from_gem_file(path)
+      container = Stickler::GemContainer.new(path)
       return container.spec
     end
 
-    def speclite_from_specification( spec )
-      Stickler::SpecLite.new( spec.name, spec.version.to_s, spec.platform )
+    def speclite_from_specification(spec)
+      Stickler::SpecLite.new(spec.name, spec.version.to_s, spec.platform)
     end
   end
 end

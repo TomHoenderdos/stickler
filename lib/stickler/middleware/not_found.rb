@@ -55,7 +55,7 @@ module Stickler::Middleware
 
     def call(_env)
       [404,
-       { 'Content-Type' => 'text/html', 'Content-Length' => @size },
+       {"Content-Type" => "text/html", "Content-Length" => @size},
        [@body]]
     end
   end

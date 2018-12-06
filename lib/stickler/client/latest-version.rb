@@ -14,7 +14,7 @@ Usage: stickler latest-version gem-name
       def parse(argv)
         gem_name = nil
         opts = super(argv) do |p, _o|
-          raise Optimist::CommandlineError, 'At lest one gem-name is required' if p.leftovers.empty?
+          raise Optimist::CommandlineError, "At lest one gem-name is required" if p.leftovers.empty?
 
           gem_name = p.leftovers.shift
         end

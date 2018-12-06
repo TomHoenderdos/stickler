@@ -1,5 +1,5 @@
-require 'rubygems'
-require 'stickler/repository/rubygems_authenticator'
+require "rubygems"
+require "stickler/repository/rubygems_authenticator"
 
 module Stickler
   class Client
@@ -9,7 +9,7 @@ module Stickler
       end
 
       def config_path
-        File.join(Gem.user_home, '.gem', 'stickler')
+        File.join(Gem.user_home, ".gem", "stickler")
       end
 
       def configuration
@@ -48,7 +48,7 @@ module Stickler
         dirname = File.dirname(config_path)
         Dir.mkdir(dirname) unless File.exist?(dirname)
 
-        File.open(config_path, 'w') do |f|
+        File.open(config_path, "w") do |f|
           f.write config.to_yaml
         end
         @updated = true

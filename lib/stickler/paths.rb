@@ -18,10 +18,10 @@ module Stickler
     #
     def self.root_dir
       @root_dir ||= begin
-                      path_parts = ::File.expand_path(__FILE__).split(::File::SEPARATOR)
-                      lib_index = path_parts.rindex('lib')
-                      @root_dir = path_parts[0...lib_index].join(::File::SEPARATOR) + ::File::SEPARATOR
-                    end
+        path_parts = ::File.expand_path(__FILE__).split(::File::SEPARATOR)
+        lib_index = path_parts.rindex("lib")
+        @root_dir = path_parts[0...lib_index].join(::File::SEPARATOR) + ::File::SEPARATOR
+      end
     end
 
     #
@@ -34,7 +34,7 @@ module Stickler
     # _args_ are *not* present.
     #
     def self.lib_path(*args)
-      sub_path('lib', *args)
+      sub_path("lib", *args)
     end
 
     #

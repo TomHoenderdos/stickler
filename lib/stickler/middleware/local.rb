@@ -1,4 +1,4 @@
-require 'stickler/middleware/index'
+require "stickler/middleware/index"
 
 module Stickler::Middleware
   #

@@ -1,6 +1,6 @@
-require 'test_stickler'
-require 'stickler_test_server'
-require 'repository/test_api_behavior'
+require "test_stickler"
+require "stickler_test_server"
+require "repository/test_api_behavior"
 
 module Stickler
   class RemoteRepositoryTest < Test
@@ -8,19 +8,17 @@ module Stickler
 
     attr_reader :repo
 
-    def setup 
+    def setup
       super
       @repo_uri = "http://localhost:6789/"
-      @repo     = ::Stickler::Repository::Remote.new( @repo_uri, :debug => true )
-      @server   = SticklerTestServer.new( test_dir, "gemcutter_repo.ru" )
+      @repo = ::Stickler::Repository::Remote.new(@repo_uri, :debug => true)
+      @server = SticklerTestServer.new(test_dir, "gemcutter_repo.ru")
       @server.start
     end
 
-    def teardown 
+    def teardown
       super
       @server.stop
     end
   end
-
 end
-

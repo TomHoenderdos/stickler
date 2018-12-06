@@ -1,4 +1,4 @@
-require 'stickler/middleware/local'
+require "stickler/middleware/local"
 
 module Stickler::Middleware
   #
@@ -26,7 +26,7 @@ module Stickler::Middleware
     end
 
     # gemcutter push
-    post '/api/v1/gems' do
+    post "/api/v1/gems" do
       begin
         spec = @repo.add(request.body)
         logger.info("Pushed #{spec.full_name}")
@@ -38,9 +38,9 @@ module Stickler::Middleware
     end
 
     # gemcutter unyank
-    post '/api/v1/gems/unyank' do
+    post "/api/v1/gems/unyank" do
       begin
-        platform = params.fetch('platform', 'ruby')
+        platform = params.fetch("platform", "ruby")
         spec = Stickler::SpecLite.new(params[:spec_name], params[:version], platform)
         @repo.unyank(spec)
         logger.info("Unyanked #{spec.full_name}")
@@ -52,8 +52,8 @@ module Stickler::Middleware
     end
 
     # gemcutter yank
-    delete '/api/v1/gems/yank' do
-      platform = params.fetch('platform', 'ruby')
+    delete "/api/v1/gems/yank" do
+      platform = params.fetch("platform", "ruby")
       spec = Stickler::SpecLite.new(params[:gem_name], params[:version], platform)
       if @repo.yank(spec)
         logger.info("Yanked #{spec.full_name}")

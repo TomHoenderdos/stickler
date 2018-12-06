@@ -1,4 +1,4 @@
-require 'pathname'
+require "pathname"
 
 # Public: A Class containing all the metadata and utilities needed to manage a
 # ruby project.
@@ -98,7 +98,7 @@ class ThisProject
   # Returns the Pathname of the directory
   def project_root
     this_file_path.ascend do |p|
-      rakefile = p.join('Rakefile')
+      rakefile = p.join("Rakefile")
       return p if rakefile.exist?
     end
   end
@@ -107,8 +107,8 @@ class ThisProject
   #
   # Returns an Array of strings
   def manifest
-    manifest_file = project_path('Manifest.txt')
-    abort 'You need a Manifest.txt' unless manifest_file.readable?
+    manifest_file = project_path("Manifest.txt")
+    abort "You need a Manifest.txt" unless manifest_file.readable?
     manifest_file.readlines.map(&:strip)
   end
 
@@ -141,21 +141,21 @@ class ThisProject
       spec.test_files = spec.files.grep(/^spec/)
 
       spec.extra_rdoc_files += spec.files.grep(/(txt|rdoc|md)$/)
-      spec.rdoc_options = ['--main', 'README.md',
-                           '--markup', 'tomdoc']
+      spec.rdoc_options = ["--main", "README.md",
+                           "--markup", "tomdoc"]
 
-      spec.required_ruby_version = '>= 1.9.3'
+      spec.required_ruby_version = ">= 1.9.3"
     end
   end
 
   # Internal: Return the gemspec for the ruby platform
   def ruby_gemspec(core = core_gemspec, &block)
-    yielding_gemspec('ruby', core, &block)
+    yielding_gemspec("ruby", core, &block)
   end
 
   # Internal: Return the gemspec for the jruby platform
   def java_gemspec(core = core_gemspec, &block)
-    yielding_gemspec('java', core, &block)
+    yielding_gemspec("java", core, &block)
   end
 
   # Internal: give an initial spec and a key, create a new gemspec based off of
@@ -173,12 +173,12 @@ class ThisProject
 
   # Internal: Return the platform of ThisProject at the current moment in time.
   def platform
-    RUBY_PLATFORM == 'java' ? 'java' : Gem::Platform::RUBY
+    RUBY_PLATFORM == "java" ? "java" : Gem::Platform::RUBY
   end
 
   # Internal: Return the DESCRIPTION section of the README.rdoc file
   def description_section
-    section_of('README.md', 'DESCRIPTION')
+    section_of("README.md", "DESCRIPTION")
   end
 
   # Internal: Return the summary text from the README
@@ -188,11 +188,11 @@ class ThisProject
 
   # Internal: Return the full description text from the README
   def description
-    description_section.join(' ').tr("\n", ' ').gsub(/[{}]/, '').gsub(/\[[^\]]+\]/, '') # strip rdoc
+    description_section.join(" ").tr("\n", " ").gsub(/[{}]/, "").gsub(/\[[^\]]+\]/, "") # strip rdoc
   end
 
   def license
-    'MIT'
+    "MIT"
   end
 
   # Internal: The path to the gemspec file

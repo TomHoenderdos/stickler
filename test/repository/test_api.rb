@@ -1,5 +1,5 @@
-require 'test_stickler'
-require 'digest/sha1'
+require "test_stickler"
+require "digest/sha1"
 
 module Stickler
   module RepositoryApiTests
@@ -25,24 +25,24 @@ module Stickler
     end
 
     def setup
-      @spec = Stickler::SpecLite.new( "foo", "1.0.0" )
+      @spec = Stickler::SpecLite.new("foo", "1.0.0")
     end
 
     def test_raising_error_on_unimplemented_methods
       %w[ uri gems_uri ].each do |method|
-        assert_raises( NotImplementedError ) { repo.send( method ) }
+        assert_raises(NotImplementedError) { repo.send(method) }
       end
     end
 
     def test_raising_error_on_unimplemented_methods_taking_a_spec
       %w[ uri_for_gem search_for delete yank get open ].each do |method|
-        assert_raises( NotImplementedError ) { repo.send( method, @spec ) }
+        assert_raises(NotImplementedError) { repo.send(method, @spec) }
       end
     end
 
     def test_raising_error_on_implemented_methods_taking_an_object
       %w[ push ].each do |method|
-        assert_raises( NotImplementedError ) { repo.send( method, Object.new ) }
+        assert_raises(NotImplementedError) { repo.send(method, Object.new) }
       end
     end
   end

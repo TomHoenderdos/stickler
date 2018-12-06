@@ -33,7 +33,7 @@ module Stickler::Middleware
         if spec = @repo.mirror(host, spec)
           logger.info("Mirrored #{spec.file_name}")
           status 201
-          response['Location'] = "/gems/#{spec.file_name}"
+          response["Location"] = "/gems/#{spec.file_name}"
           nil
         else
           logger.info("Unable to find #{spec.full_name} at #{host}")
@@ -48,11 +48,11 @@ module Stickler::Middleware
       end
     end
 
-    post '/:source/:name/:version/:platform' do
+    post "/:source/:name/:version/:platform" do
       manage(params)
     end
 
-    post '/:source/:name/:version' do
+    post "/:source/:name/:version" do
       manage(params)
     end
   end

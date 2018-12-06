@@ -1,4 +1,4 @@
-require 'pathname'
+require "pathname"
 
 module Stickler::Middleware
   # Server is the entire stickler stack as a single piece of middleware that
@@ -22,8 +22,8 @@ module Stickler::Middleware
       root = stickler_root
       Rack::Builder.app(@app) do
         use Stickler::Middleware::Compression
-        use Stickler::Middleware::Gemcutter, serve_indexes: false, repo_root: root.join('gemcutter')
-        use Stickler::Middleware::Mirror, serve_indexes: false, repo_root: root.join('mirror')
+        use Stickler::Middleware::Gemcutter, serve_indexes: false, repo_root: root.join("gemcutter")
+        use Stickler::Middleware::Mirror, serve_indexes: false, repo_root: root.join("mirror")
         use Stickler::Middleware::Index, serve_indexes: true
       end
     end

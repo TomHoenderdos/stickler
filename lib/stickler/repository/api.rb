@@ -1,4 +1,4 @@
-require 'stickler/spec_lite'
+require "stickler/spec_lite"
 
 module Stickler::Repository
   #
